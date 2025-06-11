@@ -5,10 +5,9 @@ use Classes\PochtaParser;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-
 checkAccess();
 
-$parser = new PochtaParser('https://www.pochta.ru/offices/600901');
+$parser = new PochtaParser('https://www.pochta.ru/offices/'.$_ENV["POSTAL_CODE"]);
 $parser->fetch();
 $status = $parser->getWorkingStatus();
 $hours = $parser->getWorkingHours();
