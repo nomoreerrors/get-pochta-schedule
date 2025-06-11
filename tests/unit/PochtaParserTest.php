@@ -65,11 +65,20 @@ class PochtaParserTest extends TestCase
         $parser->method('fetchHtml')->willReturn($html);
         $parser->fetch();
         $hours = $parser->getWorkingHours();
-        $this->assertEquals([
-            "Понедельник — 09:00–18:00.\n Перерыв: 13:00–14:00 ",
-            "Вторник — 09:00–18:00 "
-        ], $hours);
+        // var_dump($hours[0]) ;
+        // exit;
+        
+        $this->assertSame("11 июн, ср", $hours[0]['date']);
+        $this->assertSame("09:00–18:00", $hours[0]['hours']);
+        $this->assertSame("13:00–14:00", $hours[0]['break']);
+        
+        $this->assertSame("12 июн, ср", $hours[1]['date']);
+        $this->assertSame("09:00–19:00", $hours[1]['hours']);
+        $this->assertSame("13:00–15:00", $hours[1]['break']);
     }
+
+
+
 
 
 }

@@ -15,7 +15,7 @@ function checkAccess(): void
     // Нужна здесь на случай echo case
     header('Content-Type: application/json');
 
-    $api_key = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    $api_key = $_SERVER['HTTP_API_KEY'] ?? '';
 
     if ($api_key !== $_ENV['API_KEY']) {
     http_response_code(403);

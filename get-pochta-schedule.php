@@ -9,13 +9,13 @@ checkAccess();
 
 $parser = new PochtaParser('https://www.pochta.ru/offices/'.$_ENV["POSTAL_CODE"]);
 $parser->fetch();
-$status = $parser->getWorkingStatus();
+$today = $parser->getWorkingStatus();
 $hours = $parser->getWorkingHours();
 
 header('Content-Type: application/json'); 
 
 $response = [
-    'status' => $status,
+    'today' => $today,
     'hours' => $hours,
 ];
 

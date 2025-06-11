@@ -42,6 +42,9 @@ class PochtaParser {
      * @return string[]
      */
     public function getWorkingHours(): array {
+    //    var_dump($array);
+    //    exit;
+        
         $data = [];
         $rows = $this->xpath->query("//table[contains(@class, 'WorkingHoursTable__Table-jcknjy-0')]//tr");
         foreach ($rows as $tr) {
@@ -49,16 +52,51 @@ class PochtaParser {
                 $cols = $tr->getElementsByTagName('td');
                 if ($cols->length >= 2) {
                     $day = cleanText($cols[0]->textContent);
-                    $hours = cleanText($cols[1]->textContent) . ' ';
-                    $hours = preg_replace('/(перерыв)/iu', ".\n Перерыв:", $hours);
-
-                    $data[] = "$day — $hours";
+                    $hours = cleanText($cols[1]->textContent);
+                    $data[] = $this->parseLine("$day — $hours");
                 }
             }
         }
         return $data;
     }
 
+    /**
+     * Разбить полученную строку на массив ключ-значение
+     * @param string $line
+     * @return array{break: null, date: null, hours: null|array{break: string|null, date: string|null, hours: string|null}}
+     */
+    function parseLine(string $line): array {
+        // Шаг 1: находим первую позицию дефиса
+        $firstDashPos = mb_strpos($line, '—');
+    
+        // Обрезаем дату
+        $date = trim(mb_substr($line, 0, $firstDashPos));
+    
+        // Модифицируем строку: убираем всё до и включая первый дефис, а также пробелы с боков
+        $line = trim(mb_substr($line, $firstDashPos + 1));
+    
+        // Шаг 2: ищем "перерыв"
+        $breakPos = mb_stripos($line, 'перерыв');
+    
+        if ($breakPos !== false) {
+            $hours = trim(mb_substr($line, 0, $breakPos));
+    
+            // Снова модифицируем строку, убирая "перерыв" и всё до него
+            $line = trim(mb_substr($line, $breakPos + mb_strlen('перерыв')));
+            $break = $line;
+        } else {
+            $hours = trim($line);
+            $break = null;
+        }
+    
+        return [
+            'date' => $date,
+            'hours' => $hours,
+            'break' => $break,
+        ];
+    }
+    
+    
 
     /**
      * Вынесен для удобной работы с mock 
