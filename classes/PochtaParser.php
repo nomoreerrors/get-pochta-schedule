@@ -30,7 +30,7 @@ class PochtaParser {
      * @return string|null
      */
     public function getWorkingStatus(): ?string {
-        $nodes = $this->xpath->query("//div[contains(@class, 'WorkingStatus__Status-sc-1omyyuw-0')]");
+        $nodes = $this->xpath->query("//div[contains(@class, 'WorkingStatus__Status-r1ynz2-0')]");
         if ($nodes->length > 0) {
             return cleanText($nodes[0]->textContent);
         }
@@ -46,7 +46,7 @@ class PochtaParser {
     //    exit;
         
         $data = [];
-        $rows = $this->xpath->query("//table[contains(@class, 'WorkingHoursTable__Table-jcknjy-0')]//tr");
+        $rows = $this->xpath->query("//table[contains(@class, 'WorkingHoursTable__Table-a0obnx-0')]//tr");
         foreach ($rows as $tr) {
             if ($tr instanceof \DOMElement) {
                 $cols = $tr->getElementsByTagName('td');
