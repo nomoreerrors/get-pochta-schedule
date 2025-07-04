@@ -99,10 +99,19 @@ class PochtaParser {
     
 
     /**
-     * Вынесен для удобной работы с mock 
      * @return bool|string
      */
     protected function fetchHtml(): string {
-        return file_get_contents($this->url);
+        //Указал браузер для корректной обработки javascript на сайте и выдаче актуального расписания
+        $context = stream_context_create([
+            'http' => [
+                'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0\r\n" .
+                            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n" .
+                            "Cache-Control: no-cache\r\n",
+                'method' => 'GET',
+            ]
+        ]);
+    
+     return file_get_contents($this->url, false, $context);
     }
 }
